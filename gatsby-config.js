@@ -3,6 +3,7 @@ module.exports = {
     title: `VP Bygg XPS`,
     description: `Norges beste tilbud på XPS-plater.`,
     author: `@vpbygg`,
+    siteUrl: "https://www.vpbygg.no",
   },
   plugins: [
     `gatsby-plugin-sitemap`,
