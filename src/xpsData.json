@@ -1,0 +1,30 @@
+[
+  {
+    "varenr": "1",
+    "name": "50mm",
+    "price_sqm": 69,
+    "quantity_sqm": 5.48,
+    "price": 378.12
+  },
+  {
+    "varenr": "2",
+    "name": "70mm",
+    "price_sqm": 95,
+    "quantity_sqm": 4.1,
+    "price": 389.5
+  },
+  {
+    "varenr": "3",
+    "name": "70mm store plater",
+    "price_sqm": 95,
+    "quantity_sqm": 8.29,
+    "price": 787.55
+  },
+  {
+    "varenr": "4",
+    "name": "100mm",
+    "price_sqm": 138,
+    "quantity_sqm": 2.74,
+    "price": 378.12
+  }
+]
