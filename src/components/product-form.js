@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Label, Input, Select, Form, Button, Message } from "semantic-ui-react";
 
+import handleForm from "../handleNetlifyForm";
 import xpsData from "../xpsData.json";
 
 import "./product-form.css";
@@ -30,6 +31,20 @@ const getDeliveryFee = location => {
 
 const formatPrice = price => {
   return price.toFixed(2);
+};
+
+const getFormData = state => {
+  const { rounded } = getPackages(state.sqm, state.productType);
+  const packagePrice = getProductPrice(state.sqm, state.productType);
+  const deliveryPrice = getDeliveryFee(state.location);
+  const totalPrice = packagePrice + deliveryPrice;
+  return {
+    ...state,
+    packages: rounded,
+    packagePrice,
+    totalPrice,
+    deliveryPrice,
+  };
 };
 
 class ProductForm extends Component {
@@ -68,17 +83,14 @@ class ProductForm extends Component {
   async submitForm() {
     this.setState({ submitState: "loading" });
     try {
-      const response = await new Promise(resolve =>
-        setTimeout(() => {
-          resolve("ok");
-        }, 500),
-      );
-      if (response === "ok") {
+      const { ok } = await handleForm("order", getFormData(this.state));
+      if (ok) {
         this.setState({ submitState: "success" });
       } else {
-        throw new Error("no");
+        throw new Error("Could not submit form.");
       }
     } catch (error) {
+      console.error(error);
       this.setState({ submitState: "error" });
     }
   }
@@ -95,108 +107,111 @@ class ProductForm extends Component {
     } = this.state;
     return (
       <div style={{ width: "100%", maxWidth: "512px" }}>
-        <div className="mb-4">
-          <div className="ui labeled input fluid">
-            <Label size="large" className="ui label">
-              type plater
-            </Label>
-            <Select
-              fluid
-              style={{ borderRadius: "0 2px 2px 0" }}
-              options={productTypes}
-              placeholder="Velg type"
-              value={productType.value}
-              onChange={(_event, target) => {
-                this.setProductType(
-                  productTypes.find(({ value }) => value === target.value),
-                );
-              }}
-            />
-          </div>
-          <Input
-            fluid
-            value={sqm}
-            type="number"
-            placeholder="10"
-            label={{ basic: true, content: "kvm" }}
-            labelPosition="right"
-            onChange={event => this.setSqm(event.target.value)}
-          />
-          <div className="ui labeled input fluid">
-            <Label size="large" className="ui label">
-              levering til
-            </Label>
-            <Select
-              fluid
-              style={{ borderRadius: "0 2px 2px 0" }}
-              options={locations}
-              placeholder="Levering til"
-              value={location.value}
-              onChange={(_event, target) => {
-                console.log("target");
-                console.log(target);
-                this.setLocation(
-                  locations.find(({ value }) => value === target.value),
-                );
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <Input
-            fluid
-            disabled
-            label={<Label style={{ width: "8rem" }}>antall pakker</Label>}
-            value={productType && getPackages(sqm, productType).rounded}
-          />
-          <Input
-            fluid
-            disabled
-            label={<Label style={{ width: "8rem" }}>pris</Label>}
-            value={
-              productType && formatPrice(getProductPrice(sqm, productType))
-            }
-          />
-          <Input
-            fluid
-            disabled
-            label={<Label style={{ width: "8rem" }}>frakt</Label>}
-            value={location && formatPrice(getDeliveryFee(location))}
-          />
-          <h2>
-            Total pris:{" "}
-            {location &&
-              productType &&
-              formatPrice(
-                getProductPrice(sqm, productType) + getDeliveryFee(location),
-              )}
-            ,-
-          </h2>
-          <p>
-            {productType &&
-              `${getPackages(sqm, productType).spareSqm.toFixed(
-                1,
-              )} kvm til overs`}
-          </p>
-        </div>
-        <hr className="border" />
         <Form
+          data-netlify="true"
           error={submitState === "error"}
           success={submitState === "success"}
         >
+          <div className="mb-4">
+            <div className="ui labeled input fluid">
+              <Label size="large" className="ui label">
+                type plater
+              </Label>
+              <Select
+                fluid
+                style={{ borderRadius: "0 2px 2px 0" }}
+                options={productTypes}
+                placeholder="Velg type"
+                value={productType.value}
+                onChange={(_event, target) => {
+                  this.setProductType(
+                    productTypes.find(({ value }) => value === target.value),
+                  );
+                }}
+              />
+            </div>
+            <Input
+              fluid
+              value={sqm}
+              type="number"
+              placeholder="10"
+              label={{ basic: true, content: "kvm" }}
+              labelPosition="right"
+              onChange={event => this.setSqm(event.target.value)}
+            />
+            <div className="ui labeled input fluid">
+              <Label size="large" className="ui label">
+                levering til
+              </Label>
+              <Select
+                fluid
+                style={{ borderRadius: "0 2px 2px 0" }}
+                options={locations}
+                placeholder="Levering til"
+                value={location.value}
+                onChange={(_event, target) => {
+                  this.setLocation(
+                    locations.find(({ value }) => value === target.value),
+                  );
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <Input
+              fluid
+              disabled
+              label={<Label style={{ width: "8rem" }}>antall pakker</Label>}
+              value={productType && getPackages(sqm, productType).rounded}
+            />
+            <Input
+              fluid
+              disabled
+              label={<Label style={{ width: "8rem" }}>pris</Label>}
+              value={
+                productType && formatPrice(getProductPrice(sqm, productType))
+              }
+            />
+            <Input
+              fluid
+              disabled
+              label={<Label style={{ width: "8rem" }}>frakt</Label>}
+              value={location && formatPrice(getDeliveryFee(location))}
+            />
+            <h2>
+              Total pris:{" "}
+              {location &&
+                productType &&
+                formatPrice(
+                  getProductPrice(sqm, productType) + getDeliveryFee(location),
+                )}
+              ,-
+            </h2>
+            <p>
+              {productType &&
+                `${getPackages(sqm, productType).spareSqm.toFixed(
+                  1,
+                )} kvm til overs`}
+            </p>
+          </div>
+          <hr className="border" />
+
           <h3>Send inn navn og telefonnummer så tar vi kontakt om tilbud.</h3>
           <Input
             fluid
+            name="name"
             label={<Label style={{ width: "5rem" }}>navn</Label>}
             onChange={event => this.setName(event.target.value)}
           />
           <Input
             fluid
+            name="number"
             label={<Label style={{ width: "5rem" }}>telefon</Label>}
             onChange={event => this.setNumber(event.target.value)}
           />
           <Button
+            type="submit"
             fluid
             primary
             disabled={
@@ -232,9 +247,14 @@ ProductForm.defaultProps = {
     text: item.name,
   })),
   locations: [
-    { text: "Romerike", key: "romerike", value: "romerike" },
-    { text: "Annen Oslo og omegn", key: "aoo", value: "aoo" },
-    { text: "Henter selv", key: "none", value: "none" },
+    { text: "Romerike", key: "romerike", value: "romerike", name: "Romerike" },
+    {
+      text: "Annen Oslo og omegn",
+      key: "aoo",
+      value: "aoo",
+      name: "Annen Oslo og omegn",
+    },
+    { text: "Henter selv", key: "none", value: "none", name: "Henter selv" },
   ],
 };
 
