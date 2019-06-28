@@ -1,0 +1,11 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@import "./variables.css";
+
+body * {
+  color: var(--plumbers-brown);
+}

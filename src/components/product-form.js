@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Input, Select, Form, Button, Message } from "semantic-ui-react";
+import { Label, Input, Select, Form, Button, Message } from "semantic-ui-react";
 
 import xpsData from "../xpsData.json";
+
+import "./product-form.css";
 
 const getPackages = (sqm, product) => {
   const exact = sqm / product.quantity_sqm;
@@ -19,8 +21,10 @@ const getDeliveryFee = location => {
   switch (location.key) {
     case "romerike":
       return 300;
-    default:
+    case "aoo":
       return 800;
+    default:
+      return 0;
   }
 };
 
@@ -91,51 +95,65 @@ class ProductForm extends Component {
     } = this.state;
     return (
       <div style={{ width: "100%", maxWidth: "512px" }}>
-        <Select
-          fluid
-          options={productTypes}
-          placeholder="Velg type"
-          value={productType.value}
-          onChange={(_event, target) => {
-            this.setProductType(
-              productTypes.find(({ value }) => value === target.value),
-            );
-          }}
-        />
-        <Input
-          fluid
-          value={sqm}
-          type="number"
-          placeholder="10"
-          label={{ basic: true, content: "kvm" }}
-          labelPosition="right"
-          onChange={event => this.setSqm(event.target.value)}
-        />
-        <Select
-          fluid
-          options={locations}
-          placeholder="Levering til"
-          value={location.value}
-          onChange={(_event, target) => {
-            console.log("target");
-            console.log(target);
-            this.setLocation(
-              locations.find(({ value }) => value === target.value),
-            );
-          }}
-        />
+        <div className="mb-4">
+          <div className="ui labeled input fluid">
+            <Label size="large" className="ui label">
+              type plater
+            </Label>
+            <Select
+              fluid
+              style={{ borderRadius: "0 2px 2px 0" }}
+              options={productTypes}
+              placeholder="Velg type"
+              value={productType.value}
+              onChange={(_event, target) => {
+                this.setProductType(
+                  productTypes.find(({ value }) => value === target.value),
+                );
+              }}
+            />
+          </div>
+          <Input
+            fluid
+            value={sqm}
+            type="number"
+            placeholder="10"
+            label={{ basic: true, content: "kvm" }}
+            labelPosition="right"
+            onChange={event => this.setSqm(event.target.value)}
+          />
+          <div className="ui labeled input fluid">
+            <Label size="large" className="ui label">
+              levering til
+            </Label>
+            <Select
+              fluid
+              style={{ borderRadius: "0 2px 2px 0" }}
+              options={locations}
+              placeholder="Levering til"
+              value={location.value}
+              onChange={(_event, target) => {
+                console.log("target");
+                console.log(target);
+                this.setLocation(
+                  locations.find(({ value }) => value === target.value),
+                );
+              }}
+            />
+          </div>
+        </div>
 
-        <div>
+        <div className="mb-8">
           <Input
             fluid
             disabled
-            label="antall pakker"
+            label={<Label style={{ width: "8rem" }}>antall pakker</Label>}
             value={productType && getPackages(sqm, productType).rounded}
           />
           <Input
             fluid
             disabled
-            label="pris"
+            label={<Label style={{ width: "8rem" }}>pris</Label>}
             value={
               productType && formatPrice(getProductPrice(sqm, productType))
             }
@@ -143,7 +161,7 @@ class ProductForm extends Component {
           <Input
             fluid
             disabled
-            label="frakt"
+            label={<Label style={{ width: "8rem" }}>frakt</Label>}
             value={location && formatPrice(getDeliveryFee(location))}
           />
           <h2>
@@ -170,12 +188,12 @@ class ProductForm extends Component {
           <h3>Send inn navn og telefonnummer så tar vi kontakt om tilbud.</h3>
           <Input
             fluid
-            label="navn"
+            label={<Label style={{ width: "5rem" }}>navn</Label>}
             onChange={event => this.setName(event.target.value)}
           />
           <Input
             fluid
-            label="telefon"
+            label={<Label style={{ width: "5rem" }}>telefon</Label>}
             onChange={event => this.setNumber(event.target.value)}
           />
           <Button
@@ -216,6 +234,7 @@ ProductForm.defaultProps = {
   locations: [
     { text: "Romerike", key: "romerike", value: "romerike" },
     { text: "Annen Oslo og omegn", key: "aoo", value: "aoo" },
+    { text: "Henter selv", key: "none", value: "none" },
   ],
 };
 

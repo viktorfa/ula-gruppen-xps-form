@@ -1,7 +1,13 @@
 module.exports = {
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        "masons-orange": "#FF715B",
+        "painters-white": "#FFFFFF",
+        "plumbers-brown": "#523F38",
+      },
+    },
   },
   variants: {},
-  plugins: []
-}
+  plugins: [],
+};
