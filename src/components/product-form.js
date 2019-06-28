@@ -118,6 +118,12 @@ class ProductForm extends Component {
               <Label size="large" className="ui label">
                 type plater
               </Label>
+              <input
+                type="hidden"
+                name="productType"
+                value={productType.name}
+              />
+              <input type="hidden" name="location" value={location.name} />
               <Select
                 name="productType"
                 fluid
