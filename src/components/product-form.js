@@ -108,6 +108,7 @@ class ProductForm extends Component {
     return (
       <div style={{ width: "100%", maxWidth: "512px" }}>
         <Form
+          name="order"
           data-netlify="true"
           error={submitState === "error"}
           success={submitState === "success"}
