@@ -119,6 +119,7 @@ class ProductForm extends Component {
                 type plater
               </Label>
               <Select
+                name="productType"
                 fluid
                 style={{ borderRadius: "0 2px 2px 0" }}
                 options={productTypes}
@@ -132,6 +133,7 @@ class ProductForm extends Component {
               />
             </div>
             <Input
+              name="sqm"
               fluid
               value={sqm}
               type="number"
@@ -145,6 +147,7 @@ class ProductForm extends Component {
                 levering til
               </Label>
               <Select
+                name="location"
                 fluid
                 style={{ borderRadius: "0 2px 2px 0" }}
                 options={locations}
@@ -159,27 +162,40 @@ class ProductForm extends Component {
             </div>
           </div>
 
+          <Input
+            name="packages"
+            fluid
+            disabled
+            label={<Label style={{ width: "8rem" }}>antall pakker</Label>}
+            value={productType && getPackages(sqm, productType).rounded}
+          />
+          <Input
+            name="packagePrice"
+            fluid
+            disabled
+            label={<Label style={{ width: "8rem" }}>pris</Label>}
+            value={
+              productType && formatPrice(getProductPrice(sqm, productType))
+            }
+          />
+          <Input
+            name="deliveryPrice"
+            fluid
+            disabled
+            label={<Label style={{ width: "8rem" }}>frakt</Label>}
+            value={location && formatPrice(getDeliveryFee(location))}
+          />
+          <input
+            type="hidden"
+            name="totalPrice"
+            value={
+              productType &&
+              formatPrice(
+                getProductPrice(sqm, productType) + getDeliveryFee(location),
+              )
+            }
+          />
           <div className="mb-8">
-            <Input
-              fluid
-              disabled
-              label={<Label style={{ width: "8rem" }}>antall pakker</Label>}
-              value={productType && getPackages(sqm, productType).rounded}
-            />
-            <Input
-              fluid
-              disabled
-              label={<Label style={{ width: "8rem" }}>pris</Label>}
-              value={
-                productType && formatPrice(getProductPrice(sqm, productType))
-              }
-            />
-            <Input
-              fluid
-              disabled
-              label={<Label style={{ width: "8rem" }}>frakt</Label>}
-              value={location && formatPrice(getDeliveryFee(location))}
-            />
             <h2>
               Total pris:{" "}
               {location &&
