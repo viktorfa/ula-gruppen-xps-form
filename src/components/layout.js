@@ -18,8 +18,7 @@ const Layout = ({ children }) => {
           {children}
         </main>
         <footer className="text-center">
-          © {new Date().getFullYear()}, VP Bygg (tidligere kjent som ULA gruppen
-          som nå er konkurs).
+          © {new Date().getFullYear()} VP Bygg
         </footer>
       </div>
     </>

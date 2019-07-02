@@ -3,6 +3,7 @@ import { Label, Input, Select, Form, Button, Message } from "semantic-ui-react";
 
 import handleForm from "../handleNetlifyForm";
 import xpsData from "../xpsData.json";
+import locationData from "../locationData.json";
 
 import "./product-form.css";
 
@@ -22,7 +23,7 @@ const getDeliveryFee = location => {
   switch (location.key) {
     case "romerike":
       return 300;
-    case "aoo":
+    case "oo":
       return 800;
     default:
       return 0;
@@ -110,6 +111,7 @@ class ProductForm extends Component {
         <Form
           name="order"
           data-netlify="true"
+          subject="Bestilling XPS"
           error={submitState === "error"}
           success={submitState === "success"}
         >
@@ -189,7 +191,12 @@ class ProductForm extends Component {
             fluid
             disabled
             label={<Label style={{ width: "8rem" }}>frakt</Label>}
-            value={location && formatPrice(getDeliveryFee(location))}
+            value={
+              (location &&
+                getDeliveryFee(location) &&
+                formatPrice(getDeliveryFee(location))) ||
+              "diskuteres senere"
+            }
           />
           <input
             type="hidden"
@@ -201,7 +208,7 @@ class ProductForm extends Component {
               )
             }
           />
-          <div className="mb-8">
+          <div className="my-8">
             <h2>
               Total pris:{" "}
               {location &&
@@ -269,16 +276,7 @@ ProductForm.defaultProps = {
     value: item.varenr,
     text: item.name,
   })),
-  locations: [
-    { text: "Romerike", key: "romerike", value: "romerike", name: "Romerike" },
-    {
-      text: "Annen Oslo og omegn",
-      key: "aoo",
-      value: "aoo",
-      name: "Annen Oslo og omegn",
-    },
-    { text: "Henter selv", key: "none", value: "none", name: "Henter selv" },
-  ],
+  locations: locationData,
 };
 
 export default ProductForm;

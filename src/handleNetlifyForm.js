@@ -12,7 +12,11 @@ const handleForm = async (formName, state) => {
   return fetch("/", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: encode({ "form-name": formName, ...state }),
+    body: encode({
+      "form-name": formName,
+      subject: "Bestilling XPS",
+      ...state,
+    }),
   });
 };
 
