@@ -2,15 +2,14 @@ import React, { Component } from "react";
 import { Label, Input, Select, Form, Button, Message } from "semantic-ui-react";
 
 import handleForm from "../handleNetlifyForm";
-import xpsData from "../xpsData.json";
-import locationData from "../locationData.json";
 
 import "./product-form.css";
+import { graphql, StaticQuery } from "gatsby";
 
 const getPackages = (sqm, product) => {
-  const exact = sqm / product.quantity_sqm;
+  const exact = sqm / product.quantitysqm;
   const rounded = Math.ceil(exact);
-  const spareSqm = (rounded - exact) * product.quantity_sqm;
+  const spareSqm = (rounded - exact) * product.quantitysqm;
   return {
     rounded,
     exact,
@@ -39,7 +38,30 @@ const getFormData = state => {
   };
 };
 
-class ProductForm extends Component {
+const ProductForm = () => (
+  <StaticQuery
+    query={gqlQuery}
+    render={data => {
+      const products = data.products.edges.map(({ node }) => ({
+        ...node,
+        key: node.id,
+        value: node.id,
+        text: node.name,
+      }));
+      const locations = data.locations.edges.map(({ node }) => ({
+        ...node,
+        key: node.id,
+        value: node.id,
+        text: node.name,
+      }));
+      return (
+        <ProductFormContent locations={locations} productTypes={products} />
+      );
+    }}
+  />
+);
+
+class ProductFormContent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -88,7 +110,6 @@ class ProductForm extends Component {
   }
 
   render() {
-    const { productTypes, locations } = this.props;
     const {
       location,
       sqm,
@@ -97,6 +118,8 @@ class ProductForm extends Component {
       name,
       number,
     } = this.state;
+    const { productTypes, locations } = this.props;
+
     return (
       <div style={{ width: "100%", maxWidth: "512px" }}>
         <Form
@@ -260,14 +283,29 @@ class ProductForm extends Component {
   }
 }
 
-ProductForm.defaultProps = {
-  productTypes: xpsData.map(item => ({
-    ...item,
-    key: item.varenr,
-    value: item.varenr,
-    text: item.name,
-  })),
-  locations: locationData,
-};
-
 export default ProductForm;
+
+const gqlQuery = graphql`
+  query {
+    locations: allLocation {
+      edges {
+        node {
+          name
+          price
+          id
+        }
+      }
+    }
+    products: allProduct {
+      edges {
+        node {
+          id
+          name
+          price
+          pricesqm
+          quantitysqm
+        }
+      }
+    }
+  }
+`;
