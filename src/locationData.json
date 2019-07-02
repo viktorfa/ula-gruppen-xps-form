@@ -3,18 +3,21 @@
     "text": "Romerike",
     "key": "romerike",
     "value": "romerike",
+    "price": 300,
     "name": "Romerike"
   },
   {
     "text": "Oslo og omegn",
     "key": "oo",
     "value": "oo",
+    "price": 500,
     "name": "Oslo og omegn"
   },
   {
     "text": "Annet",
     "key": "none",
     "value": "none",
+    "price": 0,
     "name": "Annet"
   }
 ]

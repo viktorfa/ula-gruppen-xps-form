@@ -19,16 +19,7 @@ const getPackages = (sqm, product) => {
 };
 const getProductPrice = (sqm, product) =>
   getPackages(sqm, product).rounded * product.price;
-const getDeliveryFee = location => {
-  switch (location.key) {
-    case "romerike":
-      return 300;
-    case "oo":
-      return 800;
-    default:
-      return 0;
-  }
-};
+const getDeliveryFee = location => location.price;
 
 const formatPrice = price => {
   return price.toFixed(2);
