@@ -97,7 +97,10 @@ class ProductFormContent extends Component {
   async submitForm() {
     this.setState({ submitState: "loading" });
     try {
-      const { ok } = await handleForm("order", getFormData(this.state));
+      const { ok } = await handleForm(
+        "Bestilling XPS",
+        getFormData(this.state),
+      );
       if (ok) {
         this.setState({ submitState: "success" });
       } else {
@@ -123,9 +126,8 @@ class ProductFormContent extends Component {
     return (
       <div style={{ width: "100%", maxWidth: "512px" }}>
         <Form
-          name="order"
+          name="Bestilling XPS"
           data-netlify="true"
-          subject="Bestilling XPS"
           error={submitState === "error"}
           success={submitState === "success"}
         >
@@ -139,6 +141,7 @@ class ProductFormContent extends Component {
                 name="productType"
                 value={productType.name}
               />
+              <input type="hidden" name="subject" value={name} />
               <input type="hidden" name="location" value={location.name} />
               <Select
                 name="productType"
