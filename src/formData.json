@@ -1,0 +1,29 @@
+{
+  "form-name": "Bestilling XPS",
+  "sqm": "20",
+  "productType": {
+    "id": "product-1",
+    "name": "50mm",
+    "price": 378.12,
+    "pricesqm": 69,
+    "quantitysqm": 5.48,
+    "key": "product-1",
+    "value": "product-1",
+    "text": "50mm"
+  },
+  "location": {
+    "name": "Romerike",
+    "price": 300,
+    "id": "location-romerike",
+    "key": "location-romerike",
+    "value": "location-romerike",
+    "text": "Romerike"
+  },
+  "submitState": "none",
+  "name": "Jon",
+  "number": "90909090",
+  "packages": 4,
+  "packagePrice": 1512.48,
+  "totalPrice": 1812.48,
+  "deliveryPrice": 300
+}
